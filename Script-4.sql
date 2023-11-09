@@ -1,87 +1,47 @@
-/* LIMIT */
-
-SELECT
-	MENU_CODE,
-	MENU_NAME,
-	MENU_PRICE
-	FROM tbl_menu
-	ORDER BY MENU_PRICE DESC;
-
--- LIMIT 몇번부터(0번이 시작), 몇개를 ;
-SELECT 
-	MENU_CODE,
-	MENU_NAME,
-	MENU_PRICE
-	FROM tbl_menu
-	ORDER BY menu_code
-	LIMIT 1,4;
-
--- LIMIT 최상위부터 개수만 제한할 시 하나만 작성하면 됨
-SELECT 
-	MENU_CODE,
-	MENU_NAME,
-	MENU_PRICE
-	FROM tbl_menu
-	ORDER BY MENU_PRICE DESC,
-	MENU_NAME ASC
-	LIMIT 5;
-
 /*
-USED_GOODS_BOARD와 USED_GOODS_REPLY 테이블에서
-USED_GOODS_BOARD
-2022년 10월에 작성된
-게시글 제목,TITLE
+COMMIT
+트렌지션 차링 처리되는 AQL명령문 중 하나로
+트렌직션은 데이터베이스 작업의 논리적인 단위를 나타내며, 
+여러 AQL문을 하나의 트랜직션으로 그룹화할 수 있으며
+데이터 무결성을 보장하기 위해서 중요한 내용이다.
 
-USED_GOODS_REPLY
-게시글 ID, BOARD_ID
-댓글 ID, REPLY_ID
-댓글 작성자 ID, WRITER_ID
-댓글 내용, CONTENTS
-댓글 작성일 CREATED_DATE
-을 조회하는 SQL문을 작성해주세요.
-결과는
-댓글 작성일 CREATED_DATE
-을 기준으로 오름차순 정렬해주시고,
-댓글 작성일이 같다면
-게시글 제목 TITLE
-을 기준으로 오름차순 정렬해주세요.
+ROLLBACK
+MYSQL에서 드렌지션 처리에 사용되는 SQL명령문 중 하나로 트랙직션은
+데이터베이스의 작업의 논리적인 단위를 나타내며, 여러 SQL문을 하나의 트렌지션으로
+그룹화할 수 있다. ROOLBACK을 사용하면 트챈지션 내에서 수행한 변경 사항을 취소하고
+이전상태로 되돌릴 수 있다.
 
+*/
 
-=========================================
+SELECT * FROM tbl_menu;
+-- AUTOCOMMIT을 활성화 시킴 // 커밋을 1로 활성화시킨다.
+SET AUTOCOMMIT = 1;
 
-CAR_RENTAL_COMPANY_CAR 테이블에서
-'네비게이션' 옵션이 포함된
-자동차 리스트를 출력하는 SQL문을 작성해주세요.
-CAR_ID
-CAR_TYPE
-DAILY_FEE	
-OPTIONS
-결과는
-자동차 ID CAR_ID
-를 기준으로 내림차순 DESC
- 정렬해주세요.
- 
- 
- ========================================
- 
- CAR_RENTAL_COMPANY_RENTAL_HISTORY 테이블에서
- 대여 시작일이 2022년 9월에 속하는 대여 기록에 대해서
- 대여 기간이 30일 이상이면 '장기 대여'
- 그렇지 않으면 '단기 대여'
- 로 표시하는 컬럼(컬럼명: RENT_TYPE)을 추가하여
- 대여기록을 출력하는 SQL문을 작성해주세요.
- 결과는 대여 기록 ID HISTORY_ID
- 를 기준으로 내림차순 DESC
-  정렬해주세요.
- 
-SELECT
-    SUBSTRING(START_DATE, 1, 10) AS CREATED_DATE
-    
-WHERE SUBSTRING(START_DATE, 1, 10) BETWEEN '2022-10-01' AND '2022-10-31'
-ORDER BY CREATED_DATE DESC, ugb.TITLE DESC;
+-- COMMIT을 활성화시킴 (=AUTOCOMIT과 같음)
+SET AUTOCOMMIT = ON;
+
+-- AUTOCOMMIT을 비활성화시킴 
+SET AUTOCOMMIT = 0;
+
+-- AUTOCOMMIT을 비활성화시킴
+SET AUTOCOMMIT = OFF;
+
+-- @Transcrtion; //일련의 행위를 하나의 묶음으로 만들어서 작업이 잘 안될시 롤백하거나 되돌릴 수 있도록 함
+-- 데이터 베이스의 상태를 변화시킬 수 있는 일련의 행위의 묶음을 transaction이라고 한다.
+START TRANSACTION; -- 묶은 단위 (트렌지션: 데이터의 상태 변화를 일으키는 것) : 커밋을 하면 끝남.
+SELECT * FROM  tbl_menu;
+INSERT INTO tbl_menu values(NULL, "바나나해장국", 8500, 4, 'Y'); -- 바나나해장국 추가
+UPDATE tbl_menu SET menu_name = "수정된메뉴" WHERE menu_code = 5; -- 5번 "수정된 메뉴"로 변경
+DELETE FROM tbl_menu WHERE menu_code = 7; -- 7번 삭제
+
+SELECT * FROM tbl_menu;
+
+ROLLBACK; -- 이전으로 롤백
+
+SELECT * FROM tbl_menu;
 
 
 
-	
+
 
 
