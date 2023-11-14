@@ -1,0 +1,1 @@
+GRANT super on *.* TO 'menu'@'%';

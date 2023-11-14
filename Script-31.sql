@@ -1,0 +1,1 @@
+GRANT CREATE ON Owner.* TO 'testtes'@'%';
